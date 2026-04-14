@@ -1,0 +1,93 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-800">📦 Product Dashboard</h1>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="flex gap-4 mb-6">
+
+      <!-- SEARCH -->
+      <input
+        type="text"
+        placeholder="🔍 Search products..."
+        class="flex-1 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 outline-none"
+        (input)="onSearch($event)"
+      />
+
+      <!-- SORT -->
+      <select
+        class="px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400"
+        (change)="onSort($event)">
+        <option value="">Sort</option>
+        <option value="price">💰 Price</option>
+        <option value="rating">⭐ Rating</option>
+      </select>
+    </div>
+
+    <!-- LOADING -->
+    @if (store.loading()) {
+      <div class="text-center py-10 text-gray-500">Loading products...</div>
+    }
+
+    <!-- GRID -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (product of store.paginatedProducts(); track product.id) {
+
+        <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
+
+          <img
+            [src]="product.thumbnail"
+          />
+
+          <div class="p-4">
+
+            <h3 class="font-semibold text-lg text-gray-800 mb-1">
+              {{ product.title }}
+            </h3>
+
+            <!-- BADGES -->
+            <div class="flex gap-2 mb-2 text-xs">
+              <span class="bg-blue-100 text-blue-600 px-2 py-1 rounded">
+                {{ product.category }}
+              </span>
+              <span class="bg-green-100 text-green-600 px-2 py-1 rounded">
+                {{ product.brand }}
+              </span>
+            </div>
+
+            <!-- PRICE + RATING -->
+            <div class="flex justify-between items-center mt-3">
+
+              <span class="text-lg font-bold text-blue-600">
+                ₹ {{ product.price }}
+              </span>
+
+              <span class="text-yellow-500 font-medium">
+                ⭐ {{ product.rating }}
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+      }
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="mt-8 flex justify-center gap-2">
+
+      @for (page of getPages(); track $index) {
+        <button
+          class="px-3 py-1 rounded border transition"
+          [class.bg-blue-500]="page === store.currentPage()"
+          [class.text-white]="page === store.currentPage()"
+          (click)="store.setPage(page)">
+          {{ page }}
+        </button>
+      }
+
+    </div>
+
+  </div>
